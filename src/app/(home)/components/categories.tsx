@@ -1,7 +1,7 @@
 import { prismaClient } from '@/lib/prisma'
-import CategoryItem from './category-item'
+import { CategoryItem } from './category-item'
 
-const Categories = async () => {
+export const Categories = async () => {
   const categories = await prismaClient.category.findMany({})
 
   return (
@@ -12,5 +12,3 @@ const Categories = async () => {
     </div>
   )
 }
-
-export default Categories

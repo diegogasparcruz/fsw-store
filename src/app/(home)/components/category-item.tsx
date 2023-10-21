@@ -13,7 +13,7 @@ type CategoryItemProps = {
   category: Category
 }
 
-const CategoryItem = ({ category }: CategoryItemProps) => {
+export const CategoryItem = ({ category }: CategoryItemProps) => {
   const categoryIcon = {
     keyboards: <KeyboardIcon size={16} />,
     monitors: <MonitorIcon size={16} />,
@@ -33,5 +33,3 @@ const CategoryItem = ({ category }: CategoryItemProps) => {
     </Badge>
   )
 }
-
-export default CategoryItem
