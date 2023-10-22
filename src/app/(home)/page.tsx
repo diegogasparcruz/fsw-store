@@ -46,6 +46,11 @@ export default async function Home() {
         <SectionTitle>Teclados</SectionTitle>
         <ProductList products={keyboards} />
       </div>
+
+      <PromoBanner
+        src="/banner-home-03.png"
+        alt="Até 20% de desconto em fones!"
+      />
     </div>
   )
 }
