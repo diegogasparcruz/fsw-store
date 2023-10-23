@@ -3,20 +3,18 @@ import { Button } from '@/components/ui/button'
 import { DiscountBadge } from '@/components/ui/discount-badge'
 import { formatCurrencyPtBr } from '@/helpers/format-currency'
 import { ProductWithTotalPriceProps } from '@/helpers/products'
+import { useCartContext } from '@/providers/cart-provider'
 
 import { ArrowLeftIcon, ArrowRightIcon, TruckIcon } from 'lucide-react'
 import { useState } from 'react'
 
 type ProductInfoProps = {
-  product: Pick<
-    ProductWithTotalPriceProps,
-    'name' | 'basePrice' | 'description' | 'discountPercentage' | 'totalPrice'
-  >
+  product: ProductWithTotalPriceProps
 }
 
-export const ProductInfo = ({
-  product: { name, basePrice, description, discountPercentage, totalPrice },
-}: ProductInfoProps) => {
+export const ProductInfo = ({ product }: ProductInfoProps) => {
+  const { addProductToCart } = useCartContext()
+
   const [quantity, setQuantity] = useState(1)
 
   const handleDescreaseQuantityClick = () => {
@@ -27,20 +25,26 @@ export const ProductInfo = ({
     setQuantity((prev) => prev + 1)
   }
 
+  const handleAddToCartClick = () => {
+    addProductToCart({ ...product, quantity })
+  }
+
   return (
     <div className="flex flex-col px-5">
-      <h2 className="text-lg">{name}</h2>
+      <h2 className="text-lg">{product.name}</h2>
 
       <div className="flex items-center gap-2">
-        <h1 className="text-xl font-bold">{formatCurrencyPtBr(totalPrice)}</h1>
-        {discountPercentage > 0 && (
-          <DiscountBadge>{discountPercentage}</DiscountBadge>
+        <h1 className="text-xl font-bold">
+          {formatCurrencyPtBr(product.totalPrice)}
+        </h1>
+        {product.discountPercentage > 0 && (
+          <DiscountBadge>{product.discountPercentage}</DiscountBadge>
         )}
       </div>
 
-      {discountPercentage > 0 && (
+      {product.discountPercentage > 0 && (
         <p className="text-sm line-through opacity-75">
-          {formatCurrencyPtBr(Number(basePrice))}
+          {formatCurrencyPtBr(Number(product.basePrice))}
         </p>
       )}
 
@@ -67,10 +71,13 @@ export const ProductInfo = ({
 
       <div className="mt-8 flex flex-col gap-3">
         <h3 className="font-bold">Descrição</h3>
-        <p className="text-justify text-sm opacity-60">{description}</p>
+        <p className="text-justify text-sm opacity-60">{product.description}</p>
       </div>
 
-      <Button className="mt-8 font-bold uppercase">
+      <Button
+        className="mt-8 font-bold uppercase"
+        onClick={handleAddToCartClick}
+      >
         Adicionar ao carrinho
       </Button>
 

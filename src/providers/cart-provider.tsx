@@ -1,7 +1,7 @@
 'use client'
 
 import { Product } from '@prisma/client'
-import { ReactNode, createContext } from 'react'
+import { ReactNode, createContext, useContext, useState } from 'react'
 
 type CartProduct = Product & {
   quantity: number
@@ -12,6 +12,7 @@ type CartContextProps = {
   cartTotalPrice: number
   cartBasePrice: number
   cartTotalDiscount: number
+  addProductToCart: (product: CartProduct) => void
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -19,13 +20,21 @@ const CartContext = createContext<CartContextProps>({
   cartBasePrice: 0,
   cartTotalDiscount: 0,
   cartTotalPrice: 0,
+  addProductToCart: () => {},
 })
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [products, setProducts] = useState<CartProduct[]>([])
+
+  const addProductToCart = (product: CartProduct) => {
+    setProducts((prev) => [...prev, product])
+  }
+
   return (
     <CartContext.Provider
       value={{
-        products: [],
+        products,
+        addProductToCart,
         cartBasePrice: 0,
         cartTotalDiscount: 0,
         cartTotalPrice: 0,
@@ -35,3 +44,5 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     </CartContext.Provider>
   )
 }
+
+export const useCartContext = () => useContext(CartContext)
