@@ -1,11 +1,13 @@
+import { formatCurrencyPtBr } from '@/helpers/format-currency'
 import { computeProductTotalPrice } from '@/helpers/products'
 import { useCartContext } from '@/providers/cart-provider'
 import { ShoppingCartIcon } from 'lucide-react'
 import { Badge } from './badge'
 import { CartItem } from './cart-item'
+import { Separator } from './separator'
 
 export const Cart = () => {
-  const { products } = useCartContext()
+  const { products, subtotal, total, totalDiscount } = useCartContext()
 
   return (
     <div className="flex flex-col gap-8">
@@ -18,13 +20,51 @@ export const Cart = () => {
       </Badge>
 
       <div className="flex flex-col gap-5">
-        {products.map((product) => (
-          <CartItem
-            key={product.id}
-            product={computeProductTotalPrice(product) as any}
-          />
-        ))}
+        {products.length > 0 ? (
+          products.map((product) => (
+            <CartItem
+              key={product.id}
+              product={computeProductTotalPrice(product) as any}
+            />
+          ))
+        ) : (
+          <p className="text-center font-semibold">
+            Carrinho vazio. Vamos fazer compras?
+          </p>
+        )}
       </div>
+
+      {products.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <Separator />
+
+          <div className="flex items-center justify-between text-xs">
+            <p>Subtotal</p>
+            <p>{formatCurrencyPtBr(subtotal)}</p>
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between text-xs">
+            <p>Entrega</p>
+            <p>GRÁTIS</p>
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between text-xs">
+            <p>Descontos</p>
+            <p>{formatCurrencyPtBr(totalDiscount)}</p>
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between text-sm font-bold">
+            <p>Total</p>
+            <p>{formatCurrencyPtBr(total)}</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
