@@ -1,6 +1,8 @@
+import { createCheckout } from '@/actions/checkout'
 import { formatCurrencyPtBr } from '@/helpers/format-currency'
 import { computeProductTotalPrice } from '@/helpers/products'
 import { useCartContext } from '@/providers/cart-provider'
+import { loadStripe } from '@stripe/stripe-js'
 import { ShoppingCartIcon } from 'lucide-react'
 import { Badge } from './badge'
 import { Button } from './button'
@@ -10,6 +12,16 @@ import { Separator } from './separator'
 
 export const Cart = () => {
   const { products, subtotal, total, totalDiscount } = useCartContext()
+
+  const handleFinishPurchaseClick = async () => {
+    const checkout = await createCheckout(products)
+
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+
+    stripe?.redirectToCheckout({
+      sessionId: checkout.id,
+    })
+  }
 
   return (
     <div className="flex h-full flex-col gap-8">
@@ -70,7 +82,12 @@ export const Cart = () => {
             <p>{formatCurrencyPtBr(total)}</p>
           </div>
 
-          <Button className="mt-7 font-bold uppercase">Finalizar compra</Button>
+          <Button
+            onClick={handleFinishPurchaseClick}
+            className="mt-7 font-bold uppercase"
+          >
+            Finalizar compra
+          </Button>
         </div>
       )}
     </div>
