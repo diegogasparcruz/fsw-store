@@ -9,7 +9,11 @@ type CartItemProps = {
 }
 
 export const CartItem = ({ product }: CartItemProps) => {
-  const { decreaseProductQuantity, increaseProductQuantity } = useCartContext()
+  const {
+    decreaseProductQuantity,
+    increaseProductQuantity,
+    removeProductCart,
+  } = useCartContext()
 
   const handleDecreaseProductQuantityClick = () => {
     decreaseProductQuantity(product.id)
@@ -17,6 +21,10 @@ export const CartItem = ({ product }: CartItemProps) => {
 
   const handleIncreaseProductQuantityClick = () => {
     increaseProductQuantity(product.id)
+  }
+
+  const handleRemoveProductClick = () => {
+    removeProductCart(product.id)
   }
 
   return (
@@ -70,7 +78,7 @@ export const CartItem = ({ product }: CartItemProps) => {
         </div>
       </div>
 
-      <Button size="icon" variant="outline">
+      <Button size="icon" variant="outline" onClick={handleRemoveProductClick}>
         <TrashIcon size={16} />
       </Button>
     </div>

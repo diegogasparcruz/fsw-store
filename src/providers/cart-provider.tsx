@@ -15,6 +15,7 @@ type CartContextProps = {
   addProductToCart: (product: CartProduct) => void
   decreaseProductQuantity: (productId: string) => void
   increaseProductQuantity: (productId: string) => void
+  removeProductCart: (productId: string) => void
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -25,6 +26,7 @@ const CartContext = createContext<CartContextProps>({
   addProductToCart: () => {},
   decreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
+  removeProductCart: () => {},
 })
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -87,6 +89,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     )
   }
 
+  const removeProductCart = (productId: string) => {
+    setProducts((prev) =>
+      prev.filter((cartProduct) => cartProduct.id !== productId),
+    )
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -94,6 +102,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         addProductToCart,
         decreaseProductQuantity,
         increaseProductQuantity,
+        removeProductCart,
         cartBasePrice: 0,
         cartTotalDiscount: 0,
         cartTotalPrice: 0,
